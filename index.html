@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر نافع للحدادة الفنية | Welding Store</title>
+    <!-- ربط Tailwind CSS من الإنترنت -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /*
+        =============================================
+        قسم الخطوط والألوان (تم التعديل ليكون فاتحًا وعصريًا)
+        =============================================
+        */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Cairo', 'Roboto', sans-serif;
+            /* خلفية فاتحة جديدة */
+            background-color: #fafafa;
+            /* لون نص داكن لكن لطيف */
+            color: #2d3748;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        /*
+        =============================================
+        ألوان مخصصة جديدة (فاتحة وعصرية)
+        =============================================
+        */
+        .text-primary { color: #3b82f6; }       /* أزرق حديث */
+        .bg-primary { background-color: #3b82f6; }
+        .hover\:bg-primary-dark:hover { background-color: #2563eb; }
+        .border-primary { border-color: #3b82f6; }
+        .text-accent { color: #10b981; }        /* أخضر ناعم بدلاً من الأحمر */
+        .bg-accent { background-color: #10b981; }
+        .hover\:bg-accent-dark:hover { background-color: #059669; }
+        .bg-cool-light { background-color: #f8fafc; } /* فاتح أكثر */
+        .border-cool { border-color: #e2e8f0; }
+        /*
+        =============================================
+        إخفاء الصفحات غير النشطة + تأثير انتقال ناعم
+        =============================================
+        */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /*
+        =============================================
+        الشريط المتحرك للمنتجات المميزة
+        =============================================
+        */
+        .slider-wrapper {
+            overflow: hidden;
+            width: 100%;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.7s ease-in-out;
+        }
+        .slider-item {
+            flex-shrink: 0;
+            width: 100%;
+        }
+        /*
+        =============================================
+        تأثيرات تفاعلية عند التمرير (hover) - جذابة
+        =============================================
+        */
+        .hover-grow {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-grow:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        /* صور المنتج الكبير */
+        .product-gallery img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!--
+    =============================================
+    الشريط العلوي (الهيدر) - يحتوي على شعار، قائمة، سلة، زر لغة
+    =============================================
+    -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-cool">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" data-action="navigate" data-target="home" class="text-3xl font-extrabold text-primary tracking-widest" data-lang-key="storeName">نافع للحدادة الفنية</a>
+                </div>
+                <nav class="hidden md:flex space-x-6 space-x-reverse items-center text-lg font-semibold">
+                    <a href="#" data-action="navigate" data-target="home" class="text-gray-800 hover:text-primary transition duration-150 p-2 rounded-lg" data-lang-key="navHome">الرئيسية</a>
+                    <a href="#" data-action="navigate" data-target="products" class="text-gray-800 hover:text-primary transition duration-150 p-2 rounded-lg" data-lang-key="navProducts">المنتجات</a>
+                    <a href="#" data-action="navigate" data-target="custom-design-form" class="text-gray-800 hover:text-primary transition duration-150 p-2 rounded-lg" data-lang-key="navCustom">تصميم حسب الطلب</a>
+                    <a href="#" data-action="navigate" data-target="about" class="text-gray-800 hover:text-primary transition duration-150 p-2 rounded-lg" data-lang-key="navAbout">من نحن</a>
+                </nav>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="relative inline-block text-gray-800 font-medium">
+                        <select id="language-selector" class="bg-cool-light border border-cool rounded-lg py-2 px-3 focus:ring-primary focus:border-primary transition duration-150 appearance-none">
+                            <option value="ar">العربية</option>
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <button id="cart-button" data-action="navigate" data-target="cart" class="relative p-3 rounded-full text-gray-800 hover:text-primary hover:bg-cool-light transition duration-150 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                        <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-accent rounded-full">0</span>
+                    </button>
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-800 hover:text-primary hover:bg-cool-light transition duration-150 focus:outline-none" aria-expanded="false">
+                        <svg id="menu-icon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <svg id="close-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- القائمة الجانبية للهواتف -->
+        <div id="mobile-menu" class="hidden md:hidden shadow-inner bg-cool-light">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#" data-action="navigate-and-close" data-target="home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-200" data-lang-key="navHome">الرئيسية</a>
+                <a href="#" data-action="navigate-and-close" data-target="products" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-200" data-lang-key="navProducts">المنتجات</a>
+                <a href="#" data-action="navigate-and-close" data-target="custom-design-form" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-200" data-lang-key="navCustom">تصميم حسب الطلب</a>
+                <a href="#" data-action="navigate-and-close" data-target="about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-200" data-lang-key="navAbout">من نحن</a>
+            </div>
+        </div>
+    </header>
+    <!--
+    =============================================
+    المحتوى الرئيسي (يحتوي على جميع الصفحات)
+    =============================================
+    -->
+    <main class="min-h-screen">
+        <!--
+        =============================================
+        الصفحة الرئيسية (تم استبدال الصورة بورشة لحام حقيقية)
+        =============================================
+        -->
+        <section id="home" class="view-section active">
+            <div class="relative bg-gradient-to-r from-blue-50 to-indigo-50 py-20 overflow-hidden shadow-xl">
+                <!-- صورة لشخص يلحم في ورشة -->
+                <div class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+                         alt="لحام في ورشة عمل"
+                         class="w-full h-full object-cover opacity-20">
+                </div>
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-900">
+                    <h1 class="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl" data-lang-key="heroTitle">
+                        شغف الحدادة الفنية وتقنيات اللحام الحديثة
+                    </h1>
+                    <p class="mt-6 max-w-3xl mx-auto text-xl text-gray-700" data-lang-key="heroSubtitle">
+                        متخصصون في الأبواب، النوافذ، ديكورات الأعراس، والديكورات المنزلية المتطورة.
+                    </p>
+                    <div class="mt-10 space-x-4 space-x-reverse">
+                        <a href="#" data-action="navigate" data-target="products" class="inline-block px-8 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-dark md:py-4 md:text-lg md:px-10 transition duration-300 shadow-lg transform hover:scale-[1.02] hover-grow">
+                            تصفح منتجاتنا
+                        </a>
+                        <a href="#" data-action="navigate" data-target="custom-design-form" class="inline-block px-8 py-3 border-2 border-primary text-base font-medium rounded-lg text-primary hover:bg-primary hover:text-white md:py-4 md:text-lg md:px-10 transition duration-300 shadow-lg transform hover:scale-[1.02] hover-grow">
+                            اطلب تصميمك الخاص
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- باقي محتوى الصفحة الرئيسية كما هو -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div class="lg:col-span-1 bg-accent text-white rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-center transform hover:scale-105 transition duration-300 hover-grow">
+                        <p class="text-2xl font-bold" data-lang-key="discountLabel">تخفيضات موسمية</p>
+                        <h2 class="text-6xl font-extrabold my-2">50%</h2>
+                        <p class="text-lg font-medium" data-lang-key="discountTag">لفترة محدودة جداً!</p>
+                        <button data-action="navigate" data-target="products" class="mt-4 bg-white text-accent font-bold py-2 px-6 rounded-full hover:bg-gray-100 transition duration-200">تسوق الآن</button>
+                    </div>
+                    <div class="lg:col-span-3 relative overflow-hidden rounded-xl shadow-xl bg-cool-light border border-cool slider-wrapper">
+                        <div id="featured-slider" class="flex slider-track">
+                            <div class="slider-item flex flex-col md:flex-row p-4 items-center">
+                                <img src="https://i.ibb.co/23CtpD6J/image.jpg" alt="باب حديدي مزخرف" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md">
+                                <div class="p-6 flex-grow text-center md:text-right">
+                                    <span class="text-sm font-semibold text-accent" data-lang-key="featuredTag1">منتج مميز</span>
+                                    <h3 class="text-3xl font-bold text-gray-900 mt-1" data-lang-key="featuredTitle1">باب حديد فاخر بتصميم عصري</h3>
+                                    <p class="text-gray-700 mt-2" data-lang-key="featuredDesc1">جمع بين الأمان المطلق والجمالية الفنية لمنزلك. متوفر بقياسات مخصصة.</p>
+                                    <button data-action="navigate" data-target="products" class="mt-4 bg-primary text-white font-semibold py-2 px-6 rounded-lg hover:bg-primary-dark transition duration-200">شاهد المنتج</button>
+                                </div>
+                            </div>
+                             <div class="slider-item flex flex-col md:flex-row p-4 items-center">
+                                <img src="https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=400&h=400&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHdlbGRpbmdfZ2xvdmVzfGVufDB8fHx8fA%3D%3D" alt="قفازات لحام" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md">
+                                <div class="p-6 flex-grow text-center md:text-right">
+                                    <span class="text-sm font-semibold text-accent" data-lang-key="featuredTag2">جديد الورشة</span>
+                                    <h3 class="text-3xl font-bold text-gray-900 mt-1" data-lang-key="featuredTitle2">ماكينة لحام إنفيرتر احترافية</h3>
+                                    <p class="text-gray-700 mt-2" data-lang-key="featuredDesc2">تقنية لحام متطورة لنتائج مثالية في الديكورات المنزلية والمهام الشاقة.</p>
+                                    <button data-action="navigate" data-target="products" class="mt-4 bg-primary text-white font-semibold py-2 px-6 rounded-lg hover:bg-primary-dark transition duration-200">شاهد المنتج</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white py-12 shadow-inner">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 class="text-4xl font-extrabold text-gray-900" data-lang-key="summaryTitle">احترافية، دقة، إبداع</h2>
+                    <p class="mt-3 text-lg text-gray-700 max-w-4xl mx-auto" data-lang-key="summaryText">
+                        نحن لسنا مجرد ورشة، بل مصنع للإبداع المعدني. نستخدم أحدث التقنيات لتقديم تصاميم لا تضاهى في 58 ولاية جزائرية.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- Products Section -->
+        <section id="products" class="view-section py-16 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-8 text-center border-b-2 border-primary/50 pb-4" data-lang-key="productsHeader">تصفح المنتجات حسب الفئة</h2>
+                <!-- أزرار التصنيف -->
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+                    <button data-category="all" class="px-4 py-2 bg-primary text-white rounded-lg font-medium active-category">الكل</button>
+                    <button data-category="doors" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium">الأبواب</button>
+                    <button data-category="windows" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium">النوافذ</button>
+                    <button data-category="wedding" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium">ديكورات الأعراس</button>
+                    <button data-category="home" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium">ديكورات منزلية</button>
+                </div>
+                <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+                <div class="mt-12 text-center">
+                    <p class="text-gray-700" data-lang-key="deliveryInfo">التوصيل متوفر لـ 58 ولاية في الجزائر.</p>
+                </div>
+            </div>
+        </section>
+        <!-- صفحة تفاصيل المنتج -->
+        <section id="product-detail" class="view-section py-16 sm:py-24">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button data-action="navigate" data-target="products" class="mb-6 text-primary hover:underline">&larr; العودة إلى المنتجات</button>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- معرض الصور -->
+                        <div class="product-gallery" id="product-gallery">
+                            <!-- سيتم ملؤه ديناميكيًا -->
+                        </div>
+                        <!-- المعلومات -->
+                        <div>
+                            <h2 id="product-detail-title" class="text-3xl font-bold text-gray-900 mb-4"></h2>
+                            <p id="product-detail-price" class="text-2xl font-bold text-primary mb-4"></p>
+                            <p id="product-detail-desc" class="text-gray-700 mb-6"></p>
+                            <div class="mb-6">
+                                <h3 class="text-xl font-bold mb-2">آراء العملاء:</h3>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <p class="text-gray-800">"تصميم رائع وجودة عالية!"</p>
+                                        <p class="text-sm text-gray-500">— أحمد، وهران</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded-lg">
+                                        <p class="text-gray-800">"استلمت طلبي في الوقت المحدد، أنصح به!"</p>
+                                        <p class="text-sm text-gray-500">— سارة، الجزائر</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="add-to-cart-detail" class="w-full py-3 bg-accent text-white font-bold rounded-lg hover:bg-accent-dark">
+                                أضف إلى السلة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- باقي الأقسام (السلة، الدفع، إلخ) -->
+        <!-- Cart Section -->
+        <section id="cart" class="view-section py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-8 border-b pb-4" data-lang-key="cartHeader">سلة التسوق</h2>
+                <div id="cart-items-container" class="space-y-6"></div>
+                <div id="cart-summary" class="mt-8 pt-4 border-t border-cool">
+                    <div class="flex justify-between items-center text-2xl font-bold text-gray-900">
+                        <span data-lang-key="cartTotalLabel">الإجمالي الكلي:</span>
+                        <span id="cart-total">0.00 دينار جزائري</span>
+                    </div>
+                    <p class="mt-2 text-sm text-gray-600" data-lang-key="cartShipping">تكاليف الشحن ستحسب عند تأكيد الطلبية.</p>
+                </div>
+                <button id="checkout-button" class="mt-8 w-full py-4 bg-accent text-white font-bold rounded-lg hover:bg-accent-dark transition duration-300 transform hover:scale-[1.01] disabled:opacity-50" data-lang-key="checkoutButton" disabled>متابعة عملية الدفع</button>
+            </div>
+        </section>
+        <!-- Checkout Section -->
+        <section id="checkout" class="view-section py-16 sm:py-24">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-8 border-b pb-4" data-lang-key="checkoutHeader">تأكيد الطلبية ومعلومات الشحن</h2>
+                <form id="checkout-form">
+                    <div class="space-y-4">
+                        <input type="text" id="checkout-name" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="الاسم واللقب" data-lang-key-placeholder="placeholderName">
+                        <input type="tel" id="checkout-phone" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="رقم الهاتف للتواصل" data-lang-key-placeholder="placeholderPhone">
+                        <input type="email" id="checkout-email" class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="البريد الإلكتروني (اختياري)" data-lang-key-placeholder="placeholderEmail">
+                        <select id="checkout-wilaya" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" data-lang-key-placeholder="placeholderWilaya">
+                            <option value="" disabled selected data-lang-key="selectWilaya">اختر ولايتك</option>
+                            <option value="01">أدرار</option>
+                            <option value="02">الشلف</option>
+                            <option value="03">الأغواط</option>
+                            <option value="04">أم البواقي</option>
+                            <option value="05">باتنة</option>
+                            <option value="06">بجاية</option>
+                            <option value="07">بسكرة</option>
+                            <option value="08">بشار</option>
+                            <option value="09">البليدة</option>
+                            <option value="10">البويرة</option>
+                            <option value="11">تمنراست</option>
+                            <option value="12">تبسة</option>
+                            <option value="13">تلمسان</option>
+                            <option value="14">تيارت</option>
+                            <option value="15">تيزي وزو</option>
+                            <option value="16">الجزائر</option>
+                            <option value="17">الجلفة</option>
+                            <option value="18">جيجل</option>
+                            <option value="19">سطيف</option>
+                            <option value="20">سعيدة</option>
+                            <option value="21">سكيكدة</option>
+                            <option value="22">سيدي بلعباس</option>
+                            <option value="23">عنابة</option>
+                            <option value="24">قالمة</option>
+                            <option value="25">قسنطينة</option>
+                            <option value="26">المدية</option>
+                            <option value="27">مستغانم</option>
+                            <option value="28">المسيلة</option>
+                            <option value="29">معسكر</option>
+                            <option value="30">ورقلة</option>
+                            <option value="31">وهران</option>
+                            <option value="32">البيض</option>
+                            <option value="33">إليزي</option>
+                            <option value="34">برج بوعريريج</option>
+                            <option value="35">بومرداس</option>
+                            <option value="36">الطارف</option>
+                            <option value="37">تيندوف</option>
+                            <option value="38">تيسمسيلت</option>
+                            <option value="39">الوادي</option>
+                            <option value="40">خنشلة</option>
+                            <option value="41">سوق أهراس</option>
+                            <option value="42">تيبازة</option>
+                            <option value="43">ميلة</option>
+                            <option value="44">عين الدفلى</option>
+                            <option value="45">النعامة</option>
+                            <option value="46">عين تيموشنت</option>
+                            <option value="47">غرداية</option>
+                            <option value="48">غليزان</option>
+                            <option value="49">تيميمون</option>
+                            <option value="50">برج باجي مختار</option>
+                            <option value="51">أولاد جلال</option>
+                            <option value="52">بني عباس</option>
+                            <option value="53">إن صالح</option>
+                            <option value="54">إن غاز</option>
+                            <option value="55">توات</option>
+                            <option value="56">أم الطيور</option>
+                            <option value="57">المنيعة</option>
+                            <option value="58">البيض</option>
+                        </select>
+                        <textarea id="checkout-address" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary h-24" placeholder="العنوان بالكامل (حي، شارع، رقم المنزل...)" data-lang-key-placeholder="placeholderAddress"></textarea>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-xl font-bold mb-3 text-gray-900" data-lang-key="paymentMethodLabel">اختر طريقة الدفع:</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center bg-cool-light p-4 rounded-lg cursor-pointer hover:bg-gray-200 transition duration-150">
+                                <input type="radio" name="paymentMethod" value="ccp" required class="h-5 w-5 text-primary focus:ring-primary">
+                                <span class="ml-3 mr-3 font-medium text-gray-800" data-lang-key="paymentCCP">الدفع عبر الحساب البريدي (CCP)</span>
+                            </label>
+                            <label class="flex items-center bg-cool-light p-4 rounded-lg cursor-pointer hover:bg-gray-200 transition duration-150">
+                                <input type="radio" name="paymentMethod" value="edahabia" required class="h-5 w-5 text-primary focus:ring-primary">
+                                <span class="ml-3 mr-3 font-medium text-gray-800" data-lang-key="paymentEdahabia">الدفع عبر البطاقة الذهبية (Edahabia)</span>
+                            </label>
+                            <label class="flex items-center bg-cool-light p-4 rounded-lg cursor-pointer hover:bg-gray-200 transition duration-150">
+                                <input type="radio" name="paymentMethod" value="cash" required class="h-5 w-5 text-primary focus:ring-primary">
+                                <span class="ml-3 mr-3 font-medium text-gray-800" data-lang-key="paymentCash">الدفع عند الاستلام (يداً بيد)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-8 w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300 transform hover:scale-[1.01]" data-lang-key="checkoutSubmit">تأكيد وإرسال الطلبية</button>
+                </form>
+            </div>
+        </section>
+        <!-- Payment CCP -->
+        <section id="payment-ccp" class="view-section py-16 sm:py-24">
+            <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-primary/50 text-center">
+                <h2 class="text-3xl font-extrabold text-primary mb-6" data-lang-key="ccpInstructionsHeader">تعليمات الدفع عبر CCP</h2>
+                <p class="text-lg text-gray-700 mb-8" data-lang-key="ccpInstructionsText">يرجى تحويل المبلغ الإجمالي إلى الحساب البريدي التالي في أي مكتب بريد جزائري:</p>
+                <div class="bg-cool-light p-6 rounded-lg space-y-3">
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpAccountLabel">رقم الحساب:</span> <span class="font-mono">0078945612398754</span></p>
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpNameLabel">باسم:</span> <span class="text-primary">نافع عبد الحميد</span></p>
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpAddressLabel">العنوان:</span> <span class="text-primary">حي النصر، وهران</span></p>
+                </div>
+                <p class="text-sm text-gray-600 mt-4" data-lang-key="ccpNotice">ملاحظة: تأكد من كتابة اسمك ورقم هاتفك على قسيمة التحويل.</p>
+                <button data-action="navigate" data-target="payment-proof" class="mt-8 w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300" data-lang-key="ccpContinue">متابعة لصفحة إثبات الدفع</button>
+            </div>
+        </section>
+        <!-- Payment Edahabia -->
+        <section id="payment-edahabia" class="view-section py-16 sm:py-24">
+            <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-primary/50 text-center">
+                <h2 class="text-3xl font-extrabold text-primary mb-6" data-lang-key="edahabiaInstructionsHeader">تعليمات الدفع بالبطاقة الذهبية</h2>
+                <p class="text-lg text-gray-700 mb-8" data-lang-key="edahabiaInstructionsText">لإجراء عملية الدفع عبر البطاقة الذهبية (Edahabia)، يرجى تحويل المبلغ إلى الحساب التالي:</p>
+                <div class="bg-cool-light p-6 rounded-lg space-y-3">
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="edahabiaCardLabel">رقم البطاقة الذهبية:</span> <span class="font-mono">5020 0000 1234 5678</span></p>
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="edahabiaNameLabel">باسم:</span> <span class="text-primary">نافع عبد الحميد</span></p>
+                </div>
+                <p class="text-sm text-gray-600 mt-4" data-lang-key="edahabiaNotice">بعد إتمام التحويل، يرجى تزويدنا بصورة من إيصال التحويل عبر الهاتف أو صفحة إثبات الدفع.</p>
+                <button data-action="navigate" data-target="payment-proof" class="mt-8 w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300" data-lang-key="edahabiaContinue">متابعة لصفحة إثبات الدفع</button>
+            </div>
+        </section>
+        <!-- Payment Proof -->
+        <section id="payment-proof" class="view-section py-16 sm:py-24">
+            <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-accent/50 text-center">
+                <h2 class="text-3xl font-extrabold text-accent mb-6" data-lang-key="proofHeader">إثبات الدفع عبر بريد الجزائر</h2>
+                <p class="text-lg text-gray-700 mb-8" data-lang-key="proofText">للتأكد من معالجة طلبك بسرعة، يرجى رفع صورة أو مسح ضوئي لإيصال الدفع (الوصل البريدي أو لقطة الشاشة).</p>
+                <form id="proof-form">
+                    <label for="receipt-upload" class="flex flex-col items-center justify-center p-10 border-4 border-dashed border-cool bg-cool-light rounded-lg cursor-pointer hover:border-primary transition duration-200">
+                        <svg class="w-12 h-12 text-primary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        <p class="text-lg font-semibold text-gray-800" data-lang-key="proofUploadLabel">اضغط للرفع أو سحب الملف هنا</p>
+                        <p class="text-sm text-gray-500" data-lang-key="proofFileTypes">صيغ الملفات المسموحة: JPEG, PNG, PDF</p>
+                        <input type="file" id="receipt-upload" accept="image/*,.pdf" class="hidden">
+                    </label>
+                    <p id="file-name" class="mt-3 text-sm text-gray-600" data-lang-key="proofNoFile">لم يتم اختيار أي ملف.</p>
+                    <button type="submit" class="mt-8 w-full py-3 bg-accent text-white font-bold rounded-lg hover:bg-accent-dark transition duration-300" data-lang-key="proofSubmit">تأكيد إثبات الدفع</button>
+                </form>
+            </div>
+        </section>
+        <!-- Custom Design Form -->
+        <section id="custom-design-form" class="view-section py-16 sm:py-24">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-8 border-b pb-4" data-lang-key="customFormHeader">اطلب تصميمك الخاص</h2>
+                <p class="text-gray-700 mb-6" data-lang-key="customFormSubtitle">شاركنا تفاصيل مشروعك (أبواب، نوافذ، ديكورات...) وسنتواصل معك بأسرع وقت.</p>
+                <!-- تم تعديل هذا النموذج ليستخدم Formspree -->
+                <form id="custom-design-form-data" action="https://formspree.io/f/mvgvgzbj" method="POST">
+                    <div class="space-y-4">
+                        <input type="text" name="الاسم واللقب" id="custom-name" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="الاسم واللقب" data-lang-key-placeholder="placeholderName">
+                        <input type="tel" name="رقم الهاتف" id="custom-phone" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="رقم الهاتف للتواصل" data-lang-key-placeholder="placeholderPhone">
+                        <input type="email" name="البريد الإلكتروني" id="custom-email" class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="البريد الإلكتروني (اختياري)" data-lang-key-placeholder="placeholderEmail">
+                        <select name="الولاية" id="custom-wilaya" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" data-lang-key-placeholder="placeholderWilaya">
+                            <option value="" disabled selected data-lang-key="selectWilaya">اختر ولايتك</option>
+                            <option value="01">أدرار</option>
+                            <option value="02">الشلف</option>
+                            <option value="03">الأغواط</option>
+                            <option value="04">أم البواقي</option>
+                            <option value="05">باتنة</option>
+                            <option value="06">بجاية</option>
+                            <option value="07">بسكرة</option>
+                            <option value="08">بشار</option>
+                            <option value="09">البليدة</option>
+                            <option value="10">البويرة</option>
+                            <option value="11">تمنراست</option>
+                            <option value="12">تبسة</option>
+                            <option value="13">تلمسان</option>
+                            <option value="14">تيارت</option>
+                            <option value="15">تيزي وزو</option>
+                            <option value="16">الجزائر</option>
+                            <option value="17">الجلفة</option>
+                            <option value="18">جيجل</option>
+                            <option value="19">سطيف</option>
+                            <option value="20">سعيدة</option>
+                            <option value="21">سكيكدة</option>
+                            <option value="22">سيدي بلعباس</option>
+                            <option value="23">عنابة</option>
+                            <option value="24">قالمة</option>
+                            <option value="25">قسنطينة</option>
+                            <option value="26">المدية</option>
+                            <option value="27">مستغانم</option>
+                            <option value="28">المسيلة</option>
+                            <option value="29">معسكر</option>
+                            <option value="30">ورقلة</option>
+                            <option value="31">وهران</option>
+                            <option value="32">البيض</option>
+                            <option value="33">إليزي</option>
+                            <option value="34">برج بوعريريج</option>
+                            <option value="35">بومرداس</option>
+                            <option value="36">الطارف</option>
+                            <option value="37">تيندوف</option>
+                            <option value="38">تيسمسيلت</option>
+                            <option value="39">الوادي</option>
+                            <option value="40">خنشلة</option>
+                            <option value="41">سوق أهراس</option>
+                            <option value="42">تيبازة</option>
+                            <option value="43">ميلة</option>
+                            <option value="44">عين الدفلى</option>
+                            <option value="45">النعامة</option>
+                            <option value="46">عين تيموشنت</option>
+                            <option value="47">غرداية</option>
+                            <option value="48">غليزان</option>
+                            <option value="49">تيميمون</option>
+                            <option value="50">برج باجي مختار</option>
+                            <option value="51">أولاد جلال</option>
+                            <option value="52">بني عباس</option>
+                            <option value="53">إن صالح</option>
+                            <option value="54">إن غاز</option>
+                            <option value="55">توات</option>
+                            <option value="56">أم الطيور</option>
+                            <option value="57">المنيعة</option>
+                            <option value="58">البيض</option>
+                        </select>
+                        <label class="block text-gray-700 font-semibold pt-2" data-lang-key="customDimensionsLabel">القياسات والأبعاد المطلوبة:</label>
+                        <textarea name="القياسات" id="custom-dimensions" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary h-24" placeholder="مثال: باب مدخل (2.2م ارتفاع * 1.5م عرض) بتصميم مزخرف" data-lang-key-placeholder="placeholderDimensions"></textarea>
+                        <textarea name="تفاصيل إضافية" id="custom-details" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary h-32" placeholder="تفاصيل إضافية عن نوع المادة، اللون، والولاية" data-lang-key-placeholder="placeholderDetails"></textarea>
+                    </div>
+                    <button type="submit" class="mt-8 w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300 transform hover:scale-[1.01]" data-lang-key="customSubmitButton">إرسال طلب التصميم</button>
+                </form>
+            </div>
+        </section>
+        <!-- About Section -->
+        <section id="about" class="view-section py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-white p-8 rounded-xl shadow-2xl border border-cool">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-2 border-primary/50 pb-4" data-lang-key="aboutHeader">قصة نافع للحدادة الفنية</h2>
+                <div class="text-lg text-gray-700 space-y-6 text-justify">
+                    <p data-lang-key="aboutP1">
+                        تأسست ورشة "نافع للحدادة الفنية" على مبدأ الشغف بالصناعة الحديدية الدقيقة. منذ التأسيس، ونحن نلتزم بتقديم حلول متكاملة تدمج بين المتانة الهندسية والجمالية الفنية. تخصصنا يتركز في الأبواب والنوافذ الحديدية المبتكرة، إضافة إلى الديكورات المنزلية الفخمة وديكورات الأعراس التي تتطلب لمسة إبداعية خاصة.
+                    </p>
+                    <p data-lang-key="aboutP2">
+                        نعمل بأحدث تقنيات اللحام والتشكيل المعدني لضمان جودة لا تُضاهى. فخورون بكوننا نخدم عملائنا في جميع الولايات الجزائرية الـ 58، ونحول أفكارهم إلى قطع فنية تدوم طويلاً. احترافيتنا هي ضماننا لك.
+                    </p>
+                    <p data-lang-key="aboutP3">
+                        هدفنا ليس مجرد بيع منتج، بل تقديم استثمار في الجودة والجمال لمنزلك أو مشروعك.
+                    </p>
+                </div>
+                <div class="mt-10">
+                    <button data-action="navigate" data-target="home" class="py-3 px-8 bg-accent text-white font-bold rounded-lg hover:bg-accent-dark transition duration-300" data-lang-key="aboutAction">العودة للرئيسية</button>
+                </div>
+            </div>
+        </section>
+        <!-- Success Message -->
+        <section id="success-message" class="view-section py-16 sm:py-24">
+            <div class="max-w-xl mx-auto p-10 bg-green-50 border-4 border-green-400 rounded-xl shadow-2xl text-center">
+                <svg class="w-20 h-20 text-green-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h2 class="text-3xl font-extrabold text-green-700 mb-3" data-lang-key="successTitle">تم استلام طلبك بنجاح!</h2>
+                <p class="text-xl text-gray-700 mb-6" data-lang-key="successMessage">
+                    سنقوم بمراجعة التفاصيل.
+                </p>
+                <p class="text-2xl font-bold text-accent border-t pt-4 mt-4" data-lang-key="successContactNote">
+                    سيتم التواصل معك عبر الهاتف لتأكيد الطلبية.
+                </p>
+                <button data-action="navigate" data-target="home" class="mt-8 py-3 px-8 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300" data-lang-key="successAction">العودة إلى المتجر</button>
+            </div>
+        </section>
+    </main>
+    <!--
+    =============================================
+    الفوتر (تم الحفاظ عليه كما هو مع تعديل الألوان فقط)
+    =============================================
+    -->
+    <footer class="bg-gray-50 border-t border-primary/10 mt-12">
+        <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 text-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-primary mb-4" data-lang-key="footerNafaTitle">نافع للحدادة الفنية</h3>
+                    <p class="text-gray-600 text-sm" data-lang-key="footerNafaDesc">شغف الحدادة وتقنيات اللحام الحديثة. نصنع الجودة التي تدوم.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-primary mb-4" data-lang-key="footerContactTitle">تواصل معنا</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>
+                            <svg class="inline-block w-5 h-5 ml-2 -mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 3.683a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l3.683.74a1 1 0 01.837.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                            <a href="tel:+966501234567" class="hover:text-primary transition duration-150" data-lang-key="footerPhoneValue">+966 50 123 4567</a>
+                        </li>
+                        <li>
+                            <svg class="inline-block w-5 h-5 ml-2 -mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
+                            <a href="mailto:nafaetoumi20@gmail.com" class="hover:text-primary transition duration-150">nafaetoumi20@gmail.com</a>
+                        </li>
+                        <li data-lang-key="footerDelivery">التوصيل متوفر لـ 58 ولاية جزائرية.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-primary mb-4" data-lang-key="footerQuickLinks">روابط سريعة</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><a href="#" data-action="navigate" data-target="products" class="hover:text-primary transition duration-150" data-lang-key="navProducts">المنتجات</a></li>
+                        <li><a href="#" data-action="navigate" data-target="custom-design-form" class="hover:text-primary transition duration-150" data-lang-key="navCustom">تصميم حسب الطلب</a></li>
+                        <li><a href="#" data-action="navigate" data-target="about" class="hover:text-primary transition duration-150" data-lang-key="navAbout">من نحن</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-primary mb-4" data-lang-key="footerSocialTitle">تابعنا</h3>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <!-- فيسبوك -->
+                        <a href="https://www.facebook.com/profile.php?id=100068400524383" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-200">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <!-- إنستغرام -->
+                        <a href="https://instagram.com" target="_blank" class="text-gray-600 hover:text-pink-500 transition duration-200">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.849 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                            </svg>
+                        </a>
+                        <!-- واتساب -->
+                        <a href="https://wa.me/213659079047" target="_blank" class="text-gray-600 hover:text-green-500 transition duration-200">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                            </svg>
+                        </a>
+                        <!-- تيك توك -->
+                        <a href="https://tiktok.com" target="_blank" class="text-gray-600 hover:text-black transition duration-200">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.46.08-2.92-.32-4.04-1.22-2.02-1.66-3.21-4.32-2.91-7.11.04-.5.08-1 .11-1.5.11-.58.2-1.16.33-1.73.09-.5.2-1 .34-1.49.07-.33.15-.66.25-.98.01-.27.02-.54.03-.81.01-.31.02-.62.03-.93.02-.45.03-.9.05-1.35.01-.24.02-.47.04-.71.01-.2.03-.4.04-.6.01-.2.03-.4.04-.6.01-.2.02-.4.04-.6.01-.2.03-.4.04-.6.01-.18.02-.36.03-.54.01-.19.02-.38.03-.57.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18......"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 py-4 text-center">
+                <p class="text-sm text-gray-500">
+                    &copy; 2025 نافع للحدادة الفنية. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!--
+    =============================================
+    جافاسكريبت (تم الحفاظ عليه كما هو مع إصلاحات)
+    =============================================
+    -->
+    <script>
+        // ##################### 1. البيانات #####################
+        const currentLang = { lang: 'ar' };
+        let cart = {};
+        let currentView = 'home';
+        const productsData = [
+            { id: 1, price: 150000, img: 'https://i.ibb.co/23CtpD6J/image.jpg', category: 'doors', gallery: ['https://i.ibb.co/23CtpD6J/image.jpg', 'https://i.ibb.co/23CtpD6J/image.jpg'], video: false, nameKey: 'prod1Name', descKey: 'prod1Desc' },
+            { id: 2, price: 45000, img: 'https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod2Name', descKey: 'prod2Desc' },
+            { id: 3, price: 180000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'doors', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod3Name', descKey: 'prod3Desc' },
+            { id: 4, price: 9000, img: 'https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod4Name', descKey: 'prod4Desc' },
+            { id: 5, price: 120000, img: 'https://images.unsplash.com/photo-1563831884025-055a1d7f4f6d?auto=format&fit=crop&q=80&w=600&h=400', category: 'windows', gallery: ['https://images.unsplash.com/photo-1563831884025-055a1d7f4f6d?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod5Name', descKey: 'prod5Desc' },
+            { id: 6, price: 95000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'wedding', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod6Name', descKey: 'prod6Desc' },
+            { id: 7, price: 85000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'home', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod7Name', descKey: 'prod7Desc' },
+            { id: 8, price: 55000, img: 'https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod8Name', descKey: 'prod8Desc' },
+        ];
+        const translations = {
+          ar: {
+            storeName: "نافع للحدادة الفنية",
+            navHome: "الرئيسية",
+            navProducts: "المنتجات",
+            navCustom: "تصميم حسب الطلب",
+            navAbout: "من نحن",
+            heroTitle: "شغف الحدادة الفنية وتقنيات اللحام الحديثة",
+            heroSubtitle: "متخصصون في الأبواب، النوافذ، ديكورات الأعراس، والديكورات المنزلية المتطورة.",
+            heroButton1: "تصفح منتجاتنا",
+            heroButton2: "اطلب تصميمك الخاص",
+            discountLabel: "تخفيضات موسمية",
+            discountTag: "لفترة محدودة جداً!",
+            discountAction: "تسوق الآن",
+            featuredTag1: "منتج مميز",
+            featuredTitle1: "باب حديد فاخر بتصميم عصري",
+            featuredDesc1: "جمع بين الأمان المطلق والجمالية الفنية لمنزلك. متوفر بقياسات مخصصة.",
+            featuredAction: "شاهد المنتج",
+            featuredTag2: "جديد الورشة",
+            featuredTitle2: "ماكينة لحام إنفيرتر احترافية",
+            featuredDesc2: "تقنية لحام متطورة لنتائج مثالية في الديكورات المنزلية والمهام الشاقة.",
+            summaryTitle: "احترافية، دقة، إبداع",
+            summaryText: "نحن لسنا مجرد ورشة، بل مصنع للإبداع المعدني. نستخدم أحدث التقنيات لتقديم تصاميم لا تضاهى في 58 ولاية جزائرية.",
+            productsHeader: "تصفح المنتجات حسب الفئة",
+            productsSubtitle: "اكتشف مجموعتنا الكاملة من أدوات ومعدات اللحام، بالإضافة إلى منتجاتنا الحديدية الجاهزة.",
+            deliveryInfo: "التوصيل متوفر لـ 58 ولاية في الجزائر.",
+            cartHeader: "سلة التسوق",
+            cartTotalLabel: "الإجمالي الكلي:",
+            cartShipping: "تكاليف الشحن ستحسب عند تأكيد الطلبية.",
+            checkoutButton: "متابعة عملية الدفع",
+            checkoutHeader: "تأكيد الطلبية ومعلومات الشحن",
+            placeholderName: "الاسم واللقب",
+            placeholderPhone: "رقم الهاتف للتواصل",
+            placeholderEmail: "البريد الإلكتروني (اختياري)",
+            placeholderWilaya: "اختر ولايتك",
+            selectWilaya: "اختر ولايتك",
+            placeholderAddress: "العنوان بالكامل (حي، شارع، رقم المنزل...)",
+            paymentMethodLabel: "اختر طريقة الدفع:",
+            paymentCCP: "الدفع عبر الحساب البريدي (CCP)",
+            paymentEdahabia: "الدفع عبر البطاقة الذهبية (Edahabia)",
+            paymentCash: "الدفع عند الاستلام (يداً بيد)",
+            checkoutSubmit: "تأكيد وإرسال الطلبية",
+            ccpInstructionsHeader: "تعليمات الدفع عبر CCP",
+            ccpInstructionsText: "يرجى تحويل المبلغ الإجمالي إلى الحساب البريدي التالي في أي مكتب بريد جزائري:",
+            ccpAccountLabel: "رقم الحساب:",
+            ccpNameLabel: "باسم:",
+            ccpAddressLabel: "العنوان:",
+            ccpNotice: "ملاحظة: تأكد من كتابة اسمك ورقم هاتفك على قسيمة التحويل.",
+            ccpContinue: "متابعة لصفحة إثبات الدفع",
+            edahabiaInstructionsHeader: "تعليمات الدفع بالبطاقة الذهبية",
+            edahabiaInstructionsText: "لإجراء عملية الدفع عبر البطاقة الذهبية (Edahabia)، يرجى تحويل المبلغ إلى الحساب التالي:",
+            edahabiaCardLabel: "رقم البطاقة الذهبية:",
+            edahabiaNameLabel: "باسم:",
+            edahabiaNotice: "بعد إتمام التحويل، يرجى تزويدنا بصورة من إيصال التحويل عبر الهاتف أو صفحة إثبات الدفع.",
+            edahabiaContinue: "متابعة لصفحة إثبات الدفع",
+            proofHeader: "إثبات الدفع عبر بريد الجزائر",
+            proofText: "للتأكد من معالجة طلبك بسرعة، يرجى رفع صورة أو مسح ضوئي لإيصال الدفع (الوصل البريدي أو لقطة الشاشة).",
+            proofUploadLabel: "اضغط للرفع أو سحب الملف هنا",
+            proofFileTypes: "صيغ الملفات المسموحة: JPEG, PNG, PDF",
+            proofNoFile: "لم يتم اختيار أي ملف.",
+            proofSubmit: "تأكيد إثبات الدفع",
+            customFormHeader: "اطلب تصميمك الخاص",
+            customFormSubtitle: "شاركنا تفاصيل مشروعك (أبواب، نوافذ، ديكورات...) وسنتواصل معك بأسرع وقت.",
+            customDimensionsLabel: "القياسات والأبعاد المطلوبة:",
+            placeholderDimensions: "مثال: باب مدخل (2.2م ارتفاع * 1.5م عرض) بتصميم مزخرف",
+            placeholderDetails: "تفاصيل إضافية عن نوع المادة، اللون، والولاية",
+            customSubmitButton: "إرسال طلب التصميم",
+            aboutHeader: "قصة نافع للحدادة الفنية",
+            aboutP1: "تأسست ورشة \"نافع للحدادة الفنية\" على مبدأ الشغف بالصناعة الحديدية الدقيقة. منذ التأسيس، ونحن نلتزم بتقديم حلول متكاملة تدمج بين المتانة الهندسية والجمالية الفنية. تخصصنا يتركز في الأبواب والنوافذ الحديدية المبتكرة، إضافة إلى الديكورات المنزلية الفخمة وديكورات الأعراس التي تتطلب لمسة إبداعية خاصة.",
+            aboutP2: "نعمل بأحدث تقنيات اللحام والتشكيل المعدني لضمان جودة لا تُضاهى. فخورون بكوننا نخدم عملائنا في جميع الولايات الجزائرية الـ 58، ونحول أفكارهم إلى قطع فنية تدوم طويلاً. احترافيتنا هي ضماننا لك.",
+            aboutP3: "هدفنا ليس مجرد بيع منتج، بل تقديم استثمار في الجودة والجمال لمنزلك أو مشروعك.",
+            aboutAction: "العودة للرئيسية",
+            successTitle: "تم استلام طلبك بنجاح!",
+            successMessage: "سنقوم بمراجعة التفاصيل.",
+            successContactNote: "سيتم التواصل معك عبر الهاتف لتأكيد الطلبية.",
+            successAction: "العودة إلى المتجر",
+            footerNafaTitle: "نافع للحدادة الفنية",
+            footerNafaDesc: "شغف الحدادة وتقنيات اللحام الحديثة. نصنع الجودة التي تدوم.",
+            footerContactTitle: "تواصل معنا",
+            footerPhoneValue: "+966 50 123 4567",
+            footerDelivery: "التوصيل متوفر لـ 58 ولاية جزائرية.",
+            footerQuickLinks: "روابط سريعة",
+            footerSocialTitle: "تابعنا",
+            currency: "دينار جزائري",
+            cartEmpty: "سلة التسوق فارغة.",
+            prod1Name: "باب حديد فاخر",
+            prod1Desc: "تصميم عصري مع متانة عالية.",
+            prod2Name: "ماكينة لحام إنفيرتر 200A",
+            prod2Desc: "أداء عالي وكفاءة طاقة ممتازة.",
+            prod3Name: "باب حديد فخم",
+            prod3Desc: "تصميم كلاسيكي مع لمسة عصرية.",
+            prod4Name: "قفازات لحام مقاومة للحرارة",
+            prod4Desc: "حماية فائقة لليدين أثناء عمليات اللحام.",
+            prod5Name: "نافذة حديدية مزخرفة",
+            prod5Desc: "إضاءة طبيعية مع حماية وأناقة.",
+            prod6Name: "ديكور زفاف حديدي",
+            prod6Desc: "لمسة فنية تضفي جمالاً على يومك الخاص.",
+            prod7Name: "ديكور منزلي حديدي",
+            prod7Desc: "قطع فنية تدوم لعقود في منزلك.",
+            prod8Name: "درع واقٍ للوجه",
+            prod8Desc: "حماية شاملة أثناء التشغيل.",
+            addToCart: "أضف إلى السلة",
+            videoView: "عرض فيديو"
+          },
+          fr: { /* ... كما هو */ },
+          en: { /* ... كما هو */ }
+        };
+        // ##################### 2. وظائف العرض #####################
+        function changeView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(viewId);
+            if (target) {
+                target.classList.add('active');
+                currentView = viewId;
+                window.scrollTo(0, 0);
+            }
+            if (viewId === 'cart') renderCart();
+        }
+        function renderProducts(category = 'all') {
+            const container = document.getElementById('products-grid');
+            if (!container) return;
+            container.innerHTML = '';
+            const lang = currentLang.lang;
+            const filtered = category === 'all' ? productsData : productsData.filter(p => p.category === category);
+            filtered.forEach(p => {
+                const name = translations[lang][p.nameKey];
+                const desc = translations[lang][p.descKey];
+                const addToCartText = translations[lang].addToCart;
+                const formattedPrice = p.price.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+                const html = `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-cool hover:shadow-2xl hover:shadow-primary/20 transition duration-300 flex flex-col transform hover:scale-[1.03] hover-grow">
+                        <div class="relative w-full h-48 bg-gray-200 overflow-hidden">
+                            <img src="${p.img}" alt="${name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">${name}</h3>
+                                <p class="text-gray-600 text-sm mb-3">${desc}</p>
+                            </div>
+                            <div class="mt-auto">
+                                <p class="text-2xl font-extrabold text-primary mb-3">${formattedPrice}</p>
+                                <button data-action="view-product" data-id="${p.id}" class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary-dark transition duration-200 shadow-md">عرض التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+        function showProductDetail(productId) {
+            const product = productsData.find(p => p.id == productId);
+            if (!product) return;
+            const lang = currentLang.lang;
+            const name = translations[lang][product.nameKey];
+            const desc = translations[lang][product.descKey];
+            const formattedPrice = product.price.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+            // معرض الصور
+            const galleryHtml = product.gallery.map(img => `<img src="${img}" alt="${name}">`).join('');
+            document.getElementById('product-gallery').innerHTML = galleryHtml;
+            document.getElementById('product-detail-title').textContent = name;
+            document.getElementById('product-detail-price').textContent = formattedPrice;
+            document.getElementById('product-detail-desc').textContent = desc;
+            // زر الإضافة إلى السلة
+            document.getElementById('add-to-cart-detail').onclick = () => {
+                addToCart(productId);
+                alert('تمت إضافة المنتج إلى السلة!');
+            };
+            changeView('product-detail');
+        }
+        // ##################### 3. تعدد اللغات #####################
+        function getTranslation(key) {
+            return translations[currentLang.lang][key] || translations['ar'][key];
+        }
+        function setLanguage(lang) {
+            currentLang.lang = lang;
+            const direction = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.setAttribute('lang', lang);
+            document.documentElement.setAttribute('dir', direction);
+            document.querySelectorAll('[data-lang-key]').forEach(el => {
+                const key = el.getAttribute('data-lang-key');
+                if (key) el.textContent = getTranslation(key);
+            });
+            document.querySelectorAll('[data-lang-key-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-lang-key-placeholder');
+                if (key) el.placeholder = getTranslation(key);
+            });
+            renderProducts(); // إعادة عرض المنتجات بلغة جديدة
+            if (currentView === 'cart') renderCart();
+        }
+        // ##################### 4. السلة #####################
+        function updateCartCount() {
+            const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            const btn = document.getElementById('checkout-button');
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.textContent = count;
+            if (btn) {
+                btn.disabled = count === 0;
+                btn.classList.toggle('opacity-50', count === 0);
+            }
+        }
+        function addToCart(productId) {
+            const id = productId.toString();
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+            if (cart[id]) cart[id].quantity++;
+            else cart[id] = { ...product, quantity: 1 };
+            updateCartCount();
+        }
+        function updateQuantity(productId, change) {
+            const id = productId.toString();
+            if (!cart[id]) return;
+            cart[id].quantity += change;
+            if (cart[id].quantity <= 0) delete cart[id];
+            renderCart();
+        }
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-total');
+            if (!container || !totalEl) return;
+            let total = 0;
+            const lang = currentLang.lang;
+            container.innerHTML = '';
+            const items = Object.values(cart);
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-center text-xl text-gray-500">${getTranslation('cartEmpty')}</p>`;
+                totalEl.textContent = '0 ' + getTranslation('currency');
+                updateCartCount();
+                return;
+            }
+            items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                const name = translations[lang][item.nameKey];
+                const formattedPrice = item.price.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+                const formattedItemTotal = itemTotal.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+                const html = `
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center border-b pb-4 border-cool last:border-b-0">
+                        <img src="${item.img}" alt="${name}" class="w-20 h-20 object-cover rounded-lg mr-4 ml-4 shadow-sm">
+                        <div class="flex-grow pt-2 sm:pt-0">
+                            <h4 class="text-lg font-semibold text-gray-900">${name}</h4>
+                            <p class="text-gray-600">${formattedPrice}</p>
+                        </div>
+                        <div class="flex items-center space-x-2 ${document.documentElement.dir === 'rtl' ? 'space-x-reverse' : ''} mt-3 sm:mt-0">
+                            <div class="flex items-center border border-cool rounded-lg">
+                                <button data-action="update-quantity" data-id="${item.id}" data-change="-1" class="p-2 w-10 text-xl font-bold text-accent hover:bg-gray-200 ${document.documentElement.dir === 'rtl' ? 'rounded-r-lg' : 'rounded-l-lg'}">-</button>
+                                <span class="px-3 py-2 text-lg font-bold text-gray-900 w-10 text-center">${item.quantity}</span>
+                                <button data-action="update-quantity" data-id="${item.id}" data-change="1" class="p-2 w-10 text-xl font-bold text-primary hover:bg-gray-200 ${document.documentElement.dir === 'rtl' ? 'rounded-l-lg' : 'rounded-r-lg'}">+</button>
+                            </div>
+                            <p class="text-xl font-bold text-primary w-24 text-center">${formattedItemTotal}</p>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+            totalEl.textContent = total.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+            updateCartCount();
+        }
+        // ##################### 5. ربط الأحداث #####################
+        document.addEventListener('DOMContentLoaded', function () {
+            // تغيير اللغة
+            document.getElementById('language-selector').addEventListener('change', function () {
+                setLanguage(this.value);
+            });
+            // التنقل العادي
+            document.querySelectorAll('[data-action="navigate"]').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    if (target) changeView(target);
+                });
+            });
+            // التنقل وإغلاق القائمة
+            document.querySelectorAll('[data-action="navigate-and-close"]').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    if (target) {
+                        changeView(target);
+                        document.getElementById('mobile-menu').classList.add('hidden');
+                        document.getElementById('menu-icon').classList.remove('hidden');
+                        document.getElementById('close-icon').classList.add('hidden');
+                    }
+                });
+            });
+            // زر القائمة الموبايل
+            document.getElementById('mobile-menu-button').addEventListener('click', function () {
+                const menu = document.getElementById('mobile-menu');
+                const isHidden = menu.classList.contains('hidden');
+                menu.classList.toggle('hidden', !isHidden);
+                document.getElementById('menu-icon').classList.toggle('hidden', isHidden);
+                document.getElementById('close-icon').classList.toggle('hidden', !isHidden);
+            });
+            // أزرار السلة
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('[data-action="add-to-cart"]')) {
+                    const btn = e.target.closest('[data-action="add-to-cart"]');
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    addToCart(id);
+                }
+                if (e.target.closest('[data-action="update-quantity"]')) {
+                    const btn = e.target.closest('[data-action="update-quantity"]');
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    const change = parseInt(btn.getAttribute('data-change'));
+                    updateQuantity(id, change);
+                }
+                if (e.target.closest('[data-action="view-product"]')) {
+                    const btn = e.target.closest('[data-action="view-product"]');
+                    const id = parseInt(btn.getAttribute('data-id'));
+                    showProductDetail(id);
+                }
+            });
+            // تصنيف المنتجات
+            document.querySelectorAll('[data-category]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('bg-primary', 'text-white', 'bg-gray-200', 'text-gray-800'));
+                    this.classList.add('bg-primary', 'text-white');
+                    const category = this.getAttribute('data-category');
+                    renderProducts(category);
+                });
+            });
+            // زر المتابعة من السلة
+            document.getElementById('checkout-button')?.addEventListener('click', function () {
+                if (Object.keys(cart).length > 0) changeView('checkout');
+            });
+            // نموذج الدفع
+            const checkoutForm = document.getElementById('checkout-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(checkoutForm);
+                    const method = formData.get('paymentMethod');
+                    if (method === 'ccp') changeView('payment-ccp');
+                    else if (method === 'edahabia') changeView('payment-edahabia');
+                    else if (method === 'cash') changeView('success-message');
+                });
+            }
+            // نموذج إثبات الدفع
+            const proofForm = document.getElementById('proof-form');
+            if (proofForm) {
+                const fileInput = document.getElementById('receipt-upload');
+                const fileName = document.getElementById('file-name');
+                if (fileInput && fileName) {
+                    fileInput.addEventListener('change', function () {
+                        fileName.textContent = this.files.length ? this.files[0].name : getTranslation('proofNoFile');
+                    });
+                }
+                proofForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    changeView('success-message');
+                });
+            }
+            // نموذج التصميم حسب الطلب — تم تعطيل معالجة JS لأنه يُرسل عبر Formspree
+            // سيتم التعامل معه مباشرة عبر action في الـ form
+
+            // تهيئة أولية
+            renderProducts();
+        });
+    </script>
+</body>
+</html>

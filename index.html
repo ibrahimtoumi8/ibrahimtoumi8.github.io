@@ -2,45 +2,27 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر نافع للحدادة الفنية | Welding Store</title>
-    <!-- ربط Tailwind CSS من الإنترنت -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نافع للحدادة الفنية | Welding Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /*
-        =============================================
-        قسم الخطوط والألوان (تم التعديل ليكون فاتحًا وعصريًا)
-        =============================================
-        */
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Roboto:wght@400;700&display=swap');
         body {
             font-family: 'Cairo', 'Roboto', sans-serif;
-            /* خلفية فاتحة جديدة */
             background-color: #fafafa;
-            /* لون نص داكن لكن لطيف */
             color: #2d3748;
             line-height: 1.6;
             overflow-x: hidden;
         }
-        /*
-        =============================================
-        ألوان مخصصة جديدة (فاتحة وعصرية)
-        =============================================
-        */
-        .text-primary { color: #3b82f6; }       /* أزرق حديث */
+        .text-primary { color: #3b82f6; }
         .bg-primary { background-color: #3b82f6; }
         .hover\:bg-primary-dark:hover { background-color: #2563eb; }
         .border-primary { border-color: #3b82f6; }
-        .text-accent { color: #10b981; }        /* أخضر ناعم بدلاً من الأحمر */
+        .text-accent { color: #10b981; }
         .bg-accent { background-color: #10b981; }
         .hover\:bg-accent-dark:hover { background-color: #059669; }
-        .bg-cool-light { background-color: #f8fafc; } /* فاتح أكثر */
+        .bg-cool-light { background-color: #f8fafc; }
         .border-cool { border-color: #e2e8f0; }
-        /*
-        =============================================
-        إخفاء الصفحات غير النشطة + تأثير انتقال ناعم
-        =============================================
-        */
         .view-section {
             display: none;
             opacity: 0;
@@ -52,11 +34,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /*
-        =============================================
-        الشريط المتحرك للمنتجات المميزة
-        =============================================
-        */
         .slider-wrapper {
             overflow: hidden;
             width: 100%;
@@ -69,11 +46,6 @@
             flex-shrink: 0;
             width: 100%;
         }
-        /*
-        =============================================
-        تأثيرات تفاعلية عند التمرير (hover) - جذابة
-        =============================================
-        */
         .hover-grow {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -81,26 +53,80 @@
             transform: scale(1.02);
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
-        /* صور المنتج الكبير */
-        .product-gallery img {
+
+        /* معرض الصور الجديد */
+        .product-gallery {
+            position: relative;
             width: 100%;
-            height: 300px;
-            object-fit: cover;
+            overflow: hidden;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .gallery-track {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+        .gallery-item {
+            min-width: 100%;
+            height: 300px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            transform: translateY(-50%);
+        }
+        .gallery-nav button {
+            background: rgba(255,255,255,0.7);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .gallery-nav button:hover {
+            background: white;
+        }
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .gallery-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+        }
+        .gallery-dot.active {
+            background: #3b82f6;
         }
     </style>
 </head>
 <body class="antialiased">
-    <!--
-    =============================================
-    الشريط العلوي (الهيدر) - يحتوي على شعار، قائمة، سلة، زر لغة
-    =============================================
-    -->
+    <!-- الهيدر -->
     <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-cool">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" data-action="navigate" data-target="home">
+                        <img src="https://i.ibb.co/GQ4fbrdP/Black-and-Yellow-Modern-Bold-Illustrative-Welding-Logo-20251029-195628.png" alt="شعار نافع للحدادة" class="h-12 w-auto mr-3">
+                    </a>
                     <a href="#" data-action="navigate" data-target="home" class="text-3xl font-extrabold text-primary tracking-widest" data-lang-key="storeName">نافع للحدادة الفنية</a>
                 </div>
                 <nav class="hidden md:flex space-x-6 space-x-reverse items-center text-lg font-semibold">
@@ -128,7 +154,6 @@
                 </div>
             </div>
         </div>
-        <!-- القائمة الجانبية للهواتف -->
         <div id="mobile-menu" class="hidden md:hidden shadow-inner bg-cool-light">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
                 <a href="#" data-action="navigate-and-close" data-target="home" class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-200" data-lang-key="navHome">الرئيسية</a>
@@ -138,24 +163,13 @@
             </div>
         </div>
     </header>
-    <!--
-    =============================================
-    المحتوى الرئيسي (يحتوي على جميع الصفحات)
-    =============================================
-    -->
+
     <main class="min-h-screen">
-        <!--
-        =============================================
-        الصفحة الرئيسية (تم استبدال الصورة بورشة لحام حقيقية)
-        =============================================
-        -->
+        <!-- الصفحة الرئيسية -->
         <section id="home" class="view-section active">
             <div class="relative bg-gradient-to-r from-blue-50 to-indigo-50 py-20 overflow-hidden shadow-xl">
-                <!-- صورة لشخص يلحم في ورشة -->
                 <div class="absolute inset-0">
-                    <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-                         alt="لحام في ورشة عمل"
-                         class="w-full h-full object-cover opacity-20">
+                    <img src="https://i.ibb.co/bMN689xz/gas-welding.jpg" alt="لحام في ورشة عمل" class="w-full h-full object-cover opacity-20">
                 </div>
                 <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-900">
                     <h1 class="text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl" data-lang-key="heroTitle">
@@ -174,7 +188,6 @@
                     </div>
                 </div>
             </div>
-            <!-- باقي محتوى الصفحة الرئيسية كما هو -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <div class="lg:col-span-1 bg-accent text-white rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-center transform hover:scale-105 transition duration-300 hover-grow">
@@ -194,8 +207,8 @@
                                     <button data-action="navigate" data-target="products" class="mt-4 bg-primary text-white font-semibold py-2 px-6 rounded-lg hover:bg-primary-dark transition duration-200">شاهد المنتج</button>
                                 </div>
                             </div>
-                             <div class="slider-item flex flex-col md:flex-row p-4 items-center">
-                                <img src="https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=400&h=400&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHdlbGRpbmdfZ2xvdmVzfGVufDB8fHx8fA%3D%3D" alt="قفازات لحام" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md">
+                            <div class="slider-item flex flex-col md:flex-row p-4 items-center">
+                                <img src="https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=400&h=400" alt="قفازات لحام" class="w-full md:w-1/3 h-48 md:h-auto object-cover rounded-lg shadow-md">
                                 <div class="p-6 flex-grow text-center md:text-right">
                                     <span class="text-sm font-semibold text-accent" data-lang-key="featuredTag2">جديد الورشة</span>
                                     <h3 class="text-3xl font-bold text-gray-900 mt-1" data-lang-key="featuredTitle2">ماكينة لحام إنفيرتر احترافية</h3>
@@ -216,11 +229,11 @@
                 </div>
             </div>
         </section>
+
         <!-- Products Section -->
         <section id="products" class="view-section py-16 sm:py-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-8 text-center border-b-2 border-primary/50 pb-4" data-lang-key="productsHeader">تصفح المنتجات حسب الفئة</h2>
-                <!-- أزرار التصنيف -->
                 <div class="flex flex-wrap justify-center gap-4 mb-10">
                     <button data-category="all" class="px-4 py-2 bg-primary text-white rounded-lg font-medium active-category">الكل</button>
                     <button data-category="doors" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-medium">الأبواب</button>
@@ -234,21 +247,29 @@
                 </div>
             </div>
         </section>
+
         <!-- صفحة تفاصيل المنتج -->
         <section id="product-detail" class="view-section py-16 sm:py-24">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <button data-action="navigate" data-target="products" class="mb-6 text-primary hover:underline">&larr; العودة إلى المنتجات</button>
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- معرض الصور -->
                         <div class="product-gallery" id="product-gallery">
-                            <!-- سيتم ملؤه ديناميكيًا -->
+                            <div class="gallery-track" id="gallery-track"></div>
+                            <div class="gallery-nav">
+                                <button id="gallery-prev"><</button>
+                                <button id="gallery-next">></button>
+                            </div>
+                            <div class="gallery-dots" id="gallery-dots"></div>
                         </div>
-                        <!-- المعلومات -->
                         <div>
-                            <h2 id="product-detail-title" class="text-3xl font-bold text-gray-900 mb-4"></h2>
-                            <p id="product-detail-price" class="text-2xl font-bold text-primary mb-4"></p>
-                            <p id="product-detail-desc" class="text-gray-700 mb-6"></p>
+                            <h2 id="product-detail-title" class="text-3xl font-bold text-gray-900 mb-2"></h2>
+                            <p id="product-detail-long-desc" class="text-gray-700 mb-4 text-sm leading-relaxed"></p>
+                            <div class="mb-4">
+                                <span id="product-detail-old-price" class="text-lg text-gray-500 line-through mr-3"></span>
+                                <span id="product-detail-price" class="text-2xl font-extrabold text-primary"></span>
+                                <span class="text-accent font-bold mr-2">تخفيض!</span>
+                            </div>
                             <div class="mb-6">
                                 <h3 class="text-xl font-bold mb-2">آراء العملاء:</h3>
                                 <div class="space-y-3">
@@ -270,7 +291,7 @@
                 </div>
             </div>
         </section>
-        <!-- باقي الأقسام (السلة، الدفع، إلخ) -->
+
         <!-- Cart Section -->
         <section id="cart" class="view-section py-16 sm:py-24">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
@@ -286,6 +307,7 @@
                 <button id="checkout-button" class="mt-8 w-full py-4 bg-accent text-white font-bold rounded-lg hover:bg-accent-dark transition duration-300 transform hover:scale-[1.01] disabled:opacity-50" data-lang-key="checkoutButton" disabled>متابعة عملية الدفع</button>
             </div>
         </section>
+
         <!-- Checkout Section -->
         <section id="checkout" class="view-section py-16 sm:py-24">
             <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
@@ -379,6 +401,7 @@
                 </form>
             </div>
         </section>
+
         <!-- Payment CCP -->
         <section id="payment-ccp" class="view-section py-16 sm:py-24">
             <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-primary/50 text-center">
@@ -386,13 +409,14 @@
                 <p class="text-lg text-gray-700 mb-8" data-lang-key="ccpInstructionsText">يرجى تحويل المبلغ الإجمالي إلى الحساب البريدي التالي في أي مكتب بريد جزائري:</p>
                 <div class="bg-cool-light p-6 rounded-lg space-y-3">
                     <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpAccountLabel">رقم الحساب:</span> <span class="font-mono">0078945612398754</span></p>
-                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpNameLabel">باسم:</span> <span class="text-primary">نافع عبد الحميد</span></p>
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpNameLabel">باسم:</span> <span class="text-primary">Ibrahim Toumi</span></p>
                     <p class="text-xl font-bold text-gray-900"><span data-lang-key="ccpAddressLabel">العنوان:</span> <span class="text-primary">حي النصر، وهران</span></p>
                 </div>
                 <p class="text-sm text-gray-600 mt-4" data-lang-key="ccpNotice">ملاحظة: تأكد من كتابة اسمك ورقم هاتفك على قسيمة التحويل.</p>
                 <button data-action="navigate" data-target="payment-proof" class="mt-8 w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300" data-lang-key="ccpContinue">متابعة لصفحة إثبات الدفع</button>
             </div>
         </section>
+
         <!-- Payment Edahabia -->
         <section id="payment-edahabia" class="view-section py-16 sm:py-24">
             <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-primary/50 text-center">
@@ -400,12 +424,13 @@
                 <p class="text-lg text-gray-700 mb-8" data-lang-key="edahabiaInstructionsText">لإجراء عملية الدفع عبر البطاقة الذهبية (Edahabia)، يرجى تحويل المبلغ إلى الحساب التالي:</p>
                 <div class="bg-cool-light p-6 rounded-lg space-y-3">
                     <p class="text-xl font-bold text-gray-900"><span data-lang-key="edahabiaCardLabel">رقم البطاقة الذهبية:</span> <span class="font-mono">5020 0000 1234 5678</span></p>
-                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="edahabiaNameLabel">باسم:</span> <span class="text-primary">نافع عبد الحميد</span></p>
+                    <p class="text-xl font-bold text-gray-900"><span data-lang-key="edahabiaNameLabel">باسم:</span> <span class="text-primary">Ibrahim Toumi</span></p>
                 </div>
                 <p class="text-sm text-gray-600 mt-4" data-lang-key="edahabiaNotice">بعد إتمام التحويل، يرجى تزويدنا بصورة من إيصال التحويل عبر الهاتف أو صفحة إثبات الدفع.</p>
                 <button data-action="navigate" data-target="payment-proof" class="mt-8 w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300" data-lang-key="edahabiaContinue">متابعة لصفحة إثبات الدفع</button>
             </div>
         </section>
+
         <!-- Payment Proof -->
         <section id="payment-proof" class="view-section py-16 sm:py-24">
             <div class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-2xl border-2 border-accent/50 text-center">
@@ -423,13 +448,13 @@
                 </form>
             </div>
         </section>
+
         <!-- Custom Design Form -->
         <section id="custom-design-form" class="view-section py-16 sm:py-24">
             <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 rounded-xl shadow-2xl border border-cool">
                 <h2 class="text-3xl font-extrabold text-gray-900 mb-8 border-b pb-4" data-lang-key="customFormHeader">اطلب تصميمك الخاص</h2>
                 <p class="text-gray-700 mb-6" data-lang-key="customFormSubtitle">شاركنا تفاصيل مشروعك (أبواب، نوافذ، ديكورات...) وسنتواصل معك بأسرع وقت.</p>
-                <!-- تم تعديل هذا النموذج ليستخدم Formspree -->
-                <form id="custom-design-form-data" action="https://formspree.io/f/mvgvgzbj" method="POST">
+                <form id="custom-design-form-data" action="https://formspree.io/f/mvgvgzbj" method="POST" enctype="multipart/form-data">
                     <div class="space-y-4">
                         <input type="text" name="الاسم واللقب" id="custom-name" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="الاسم واللقب" data-lang-key-placeholder="placeholderName">
                         <input type="tel" name="رقم الهاتف" id="custom-phone" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary" placeholder="رقم الهاتف للتواصل" data-lang-key-placeholder="placeholderPhone">
@@ -498,11 +523,16 @@
                         <label class="block text-gray-700 font-semibold pt-2" data-lang-key="customDimensionsLabel">القياسات والأبعاد المطلوبة:</label>
                         <textarea name="القياسات" id="custom-dimensions" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary h-24" placeholder="مثال: باب مدخل (2.2م ارتفاع * 1.5م عرض) بتصميم مزخرف" data-lang-key-placeholder="placeholderDimensions"></textarea>
                         <textarea name="تفاصيل إضافية" id="custom-details" required class="w-full p-3 border border-cool rounded-lg focus:ring-primary focus:border-primary h-32" placeholder="تفاصيل إضافية عن نوع المادة، اللون، والولاية" data-lang-key-placeholder="placeholderDetails"></textarea>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">تحميل صورة للتصميم المطلوب:</label>
+                            <input type="file" name="صورة التصميم" accept="image/*" class="w-full p-2 border border-cool rounded-lg">
+                        </div>
                     </div>
                     <button type="submit" class="mt-8 w-full py-4 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition duration-300 transform hover:scale-[1.01]" data-lang-key="customSubmitButton">إرسال طلب التصميم</button>
                 </form>
             </div>
         </section>
+
         <!-- About Section -->
         <section id="about" class="view-section py-16 sm:py-24">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-white p-8 rounded-xl shadow-2xl border border-cool">
@@ -523,6 +553,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Success Message -->
         <section id="success-message" class="view-section py-16 sm:py-24">
             <div class="max-w-xl mx-auto p-10 bg-green-50 border-4 border-green-400 rounded-xl shadow-2xl text-center">
@@ -538,11 +569,8 @@
             </div>
         </section>
     </main>
-    <!--
-    =============================================
-    الفوتر (تم الحفاظ عليه كما هو مع تعديل الألوان فقط)
-    =============================================
-    -->
+
+    <!-- الفوتر -->
     <footer class="bg-gray-50 border-t border-primary/10 mt-12">
         <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 text-gray-700">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -555,7 +583,7 @@
                     <ul class="space-y-2 text-gray-600">
                         <li>
                             <svg class="inline-block w-5 h-5 ml-2 -mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 3.683a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l3.683.74a1 1 0 01.837.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                            <a href="tel:+966501234567" class="hover:text-primary transition duration-150" data-lang-key="footerPhoneValue">+966 50 123 4567</a>
+                            <a href="tel:+213776084097" class="hover:text-primary transition duration-150">0776 08 40 97</a>
                         </li>
                         <li>
                             <svg class="inline-block w-5 h-5 ml-2 -mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path></svg>
@@ -575,28 +603,24 @@
                 <div>
                     <h3 class="text-xl font-bold text-primary mb-4" data-lang-key="footerSocialTitle">تابعنا</h3>
                     <div class="flex space-x-4 space-x-reverse">
-                        <!-- فيسبوك -->
                         <a href="https://www.facebook.com/profile.php?id=100068400524383" target="_blank" class="text-gray-600 hover:text-blue-600 transition duration-200">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                             </svg>
                         </a>
-                        <!-- إنستغرام -->
                         <a href="https://instagram.com" target="_blank" class="text-gray-600 hover:text-pink-500 transition duration-200">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.849 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
                             </svg>
                         </a>
-                        <!-- واتساب -->
                         <a href="https://wa.me/213659079047" target="_blank" class="text-gray-600 hover:text-green-500 transition duration-200">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                             </svg>
                         </a>
-                        <!-- تيك توك -->
-                        <a href="https://tiktok.com" target="_blank" class="text-gray-600 hover:text-black transition duration-200">
+                        <a href="https://www.tiktok.com/@akoncarson64" target="_blank" class="text-gray-600 hover:text-black transition duration-200">
                             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.46.08-2.92-.32-4.04-1.22-2.02-1.66-3.21-4.32-2.91-7.11.04-.5.08-1 .11-1.5.11-.58.2-1.16.33-1.73.09-.5.2-1 .34-1.49.07-.33.15-.66.25-.98.01-.27.02-.54.03-.81.01-.31.02-.62.03-.93.02-.45.03-.9.05-1.35.01-.24.02-.47.04-.71.01-.2.03-.4.04-.6.01-.2.03-.4.04-.6.01-.2.02-.4.04-.6.01-.2.03-.4.04-.6.01-.18.02-.36.03-.54.01-.19.02-.38.03-.57.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18......"/>
+                                <path d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.46.08-2.92-.32-4.04-1.22-2.02-1.66-3.21-4.32-2.91-7.11.04-.5.08-1 .11-1.5.11-.58.2-1.16.33-1.73.09-.5.2-1 .34-1.49.07-.33.15-.66.25-.98.01-.27.02-.54.03-.81.01-.31.02-.62.03-.93.02-.45.03-.9.05-1.35.01-.24.02-.47.04-.71.01-.2.03-.4.04-.6.01-.2.03-.4.04-.6.01-.2.02-.4.04-.6.01-.18.02-.36.03-.54.01-.19.02-.38.03-.57.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18.02-.36.03-.54.01-.18......"/>
                             </svg>
                         </a>
                     </div>
@@ -609,26 +633,142 @@
             </div>
         </div>
     </footer>
-    <!--
-    =============================================
-    جافاسكريبت (تم الحفاظ عليه كما هو مع إصلاحات)
-    =============================================
-    -->
+
     <script>
-        // ##################### 1. البيانات #####################
         const currentLang = { lang: 'ar' };
         let cart = {};
         let currentView = 'home';
+
+        // ✅ روابط الصور المباشرة
+        const imgLinks = {
+            // النوافذ
+            window1: 'https://i.ibb.co/CK7Ts3GB/1761759480333.jpg',
+            window2: 'https://i.ibb.co/1pcdZjL/IMG-20251029-202912-508.jpg',
+            window3a: 'https://i.ibb.co/n8r5cVMw/IMG-20251029-212119-326.jpg',
+            window3b: 'https://i.ibb.co/0yhkLwMy/1761759480333.jpg',
+            // الأبواب
+            door1: 'https://i.ibb.co/tPsSV3Cs/IMG-20251029-212111-302.jpg',
+            door2a: 'https://i.ibb.co/j9YHqkWY/1761759480333.jpg',
+            door2b: 'https://i.ibb.co/fVZ7qdn3/1761759483168.jpg',
+            // ديكورات منزلية
+            home1a: 'https://i.ibb.co/mVBQqXMz/IMG-20251029-212119-326.jpg',
+            home1b: 'https://i.ibb.co/YTQBSS5m/IMG-20251029-212111-302.jpg',
+            home1c: 'https://i.ibb.co/93qCxc4q/IMG-20251029-212119-326.jpg',
+            home2a: 'https://i.ibb.co/bjRtxgtQ/unknown.png',
+            home2b: 'https://i.ibb.co/cSq1FTP5/unknown.png',
+            home3a: 'https://i.ibb.co/WWPgmt7R/unknown.png',
+            home3b: 'https://i.ibb.co/PzhcrcrJ/unknown.png',
+            home3c: 'https://i.ibb.co/xtvJLmDV/unknown.png',
+            home3d: 'https://i.ibb.co/9Hd0rjh8/unknown.png',
+            home3e: 'https://i.ibb.co/Kj8dgwZw/unknown.png'
+        };
+
+        // ✅ دالة لصنع معرض من 5 صور
+        function makeGallery(...urls) {
+            const gallery = [...urls];
+            while (gallery.length < 5) {
+                gallery.push(gallery[0]);
+            }
+            return gallery.slice(0, 5);
+        }
+
+        // ✅ بيانات المنتجات
         const productsData = [
-            { id: 1, price: 150000, img: 'https://i.ibb.co/23CtpD6J/image.jpg', category: 'doors', gallery: ['https://i.ibb.co/23CtpD6J/image.jpg', 'https://i.ibb.co/23CtpD6J/image.jpg'], video: false, nameKey: 'prod1Name', descKey: 'prod1Desc' },
-            { id: 2, price: 45000, img: 'https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1627883204909-67d4f9f4a9b0?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod2Name', descKey: 'prod2Desc' },
-            { id: 3, price: 180000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'doors', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod3Name', descKey: 'prod3Desc' },
-            { id: 4, price: 9000, img: 'https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod4Name', descKey: 'prod4Desc' },
-            { id: 5, price: 120000, img: 'https://images.unsplash.com/photo-1563831884025-055a1d7f4f6d?auto=format&fit=crop&q=80&w=600&h=400', category: 'windows', gallery: ['https://images.unsplash.com/photo-1563831884025-055a1d7f4f6d?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod5Name', descKey: 'prod5Desc' },
-            { id: 6, price: 95000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'wedding', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod6Name', descKey: 'prod6Desc' },
-            { id: 7, price: 85000, img: 'https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400', category: 'home', gallery: ['https://images.unsplash.com/photo-1582234057962-e9d6d3d49e1e?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod7Name', descKey: 'prod7Desc' },
-            { id: 8, price: 55000, img: 'https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400', category: 'tools', gallery: ['https://images.unsplash.com/photo-1596207851130-9b6f8f5e7f1f?auto=format&fit=crop&q=80&w=600&h=400'], video: false, nameKey: 'prod8Name', descKey: 'prod8Desc' },
+            // النوافذ
+            {
+                id: 1,
+                price: 95000,
+                oldPrice: 110000,
+                img: imgLinks.window1,
+                category: 'windows',
+                gallery: makeGallery(imgLinks.window1),
+                nameKey: 'prod1Name',
+                descKey: 'prod1Desc',
+                longDescKey: 'prod1LongDesc'
+            },
+            {
+                id: 2,
+                price: 105000,
+                oldPrice: 120000,
+                img: imgLinks.window2,
+                category: 'windows',
+                gallery: makeGallery(imgLinks.window2),
+                nameKey: 'prod2Name',
+                descKey: 'prod2Desc',
+                longDescKey: 'prod2LongDesc'
+            },
+            {
+                id: 3,
+                price: 115000,
+                oldPrice: 130000,
+                img: imgLinks.window3a,
+                category: 'windows',
+                gallery: makeGallery(imgLinks.window3a, imgLinks.window3b),
+                nameKey: 'prod3Name',
+                descKey: 'prod3Desc',
+                longDescKey: 'prod3LongDesc'
+            },
+
+            // الأبواب
+            {
+                id: 4,
+                price: 140000,
+                oldPrice: 160000,
+                img: imgLinks.door1,
+                category: 'doors',
+                gallery: makeGallery(imgLinks.door1),
+                nameKey: 'prod4Name',
+                descKey: 'prod4Desc',
+                longDescKey: 'prod4LongDesc'
+            },
+            {
+                id: 5,
+                price: 155000,
+                oldPrice: 175000,
+                img: imgLinks.door2a,
+                category: 'doors',
+                gallery: makeGallery(imgLinks.door2a, imgLinks.door2b),
+                nameKey: 'prod5Name',
+                descKey: 'prod5Desc',
+                longDescKey: 'prod5LongDesc'
+            },
+
+            // ديكورات منزلية
+            {
+                id: 6,
+                price: 75000,
+                oldPrice: 90000,
+                img: imgLinks.home1a,
+                category: 'home',
+                gallery: makeGallery(imgLinks.home1a, imgLinks.home1b, imgLinks.home1c),
+                nameKey: 'prod6Name',
+                descKey: 'prod6Desc',
+                longDescKey: 'prod6LongDesc'
+            },
+            {
+                id: 7,
+                price: 65000,
+                oldPrice: 80000,
+                img: imgLinks.home2a,
+                category: 'home',
+                gallery: makeGallery(imgLinks.home2a, imgLinks.home2b),
+                nameKey: 'prod7Name',
+                descKey: 'prod7Desc',
+                longDescKey: 'prod7LongDesc'
+            },
+            {
+                id: 8,
+                price: 85000,
+                oldPrice: 100000,
+                img: imgLinks.home3a,
+                category: 'home',
+                gallery: makeGallery(imgLinks.home3a, imgLinks.home3b, imgLinks.home3c, imgLinks.home3d, imgLinks.home3e),
+                nameKey: 'prod8Name',
+                descKey: 'prod8Desc',
+                longDescKey: 'prod8LongDesc'
+            }
         ];
+
         const translations = {
           ar: {
             storeName: "نافع للحدادة الفنية",
@@ -638,22 +778,7 @@
             navAbout: "من نحن",
             heroTitle: "شغف الحدادة الفنية وتقنيات اللحام الحديثة",
             heroSubtitle: "متخصصون في الأبواب، النوافذ، ديكورات الأعراس، والديكورات المنزلية المتطورة.",
-            heroButton1: "تصفح منتجاتنا",
-            heroButton2: "اطلب تصميمك الخاص",
-            discountLabel: "تخفيضات موسمية",
-            discountTag: "لفترة محدودة جداً!",
-            discountAction: "تسوق الآن",
-            featuredTag1: "منتج مميز",
-            featuredTitle1: "باب حديد فاخر بتصميم عصري",
-            featuredDesc1: "جمع بين الأمان المطلق والجمالية الفنية لمنزلك. متوفر بقياسات مخصصة.",
-            featuredAction: "شاهد المنتج",
-            featuredTag2: "جديد الورشة",
-            featuredTitle2: "ماكينة لحام إنفيرتر احترافية",
-            featuredDesc2: "تقنية لحام متطورة لنتائج مثالية في الديكورات المنزلية والمهام الشاقة.",
-            summaryTitle: "احترافية، دقة، إبداع",
-            summaryText: "نحن لسنا مجرد ورشة، بل مصنع للإبداع المعدني. نستخدم أحدث التقنيات لتقديم تصاميم لا تضاهى في 58 ولاية جزائرية.",
             productsHeader: "تصفح المنتجات حسب الفئة",
-            productsSubtitle: "اكتشف مجموعتنا الكاملة من أدوات ومعدات اللحام، بالإضافة إلى منتجاتنا الحديدية الجاهزة.",
             deliveryInfo: "التوصيل متوفر لـ 58 ولاية في الجزائر.",
             cartHeader: "سلة التسوق",
             cartTotalLabel: "الإجمالي الكلي:",
@@ -671,25 +796,6 @@
             paymentEdahabia: "الدفع عبر البطاقة الذهبية (Edahabia)",
             paymentCash: "الدفع عند الاستلام (يداً بيد)",
             checkoutSubmit: "تأكيد وإرسال الطلبية",
-            ccpInstructionsHeader: "تعليمات الدفع عبر CCP",
-            ccpInstructionsText: "يرجى تحويل المبلغ الإجمالي إلى الحساب البريدي التالي في أي مكتب بريد جزائري:",
-            ccpAccountLabel: "رقم الحساب:",
-            ccpNameLabel: "باسم:",
-            ccpAddressLabel: "العنوان:",
-            ccpNotice: "ملاحظة: تأكد من كتابة اسمك ورقم هاتفك على قسيمة التحويل.",
-            ccpContinue: "متابعة لصفحة إثبات الدفع",
-            edahabiaInstructionsHeader: "تعليمات الدفع بالبطاقة الذهبية",
-            edahabiaInstructionsText: "لإجراء عملية الدفع عبر البطاقة الذهبية (Edahabia)، يرجى تحويل المبلغ إلى الحساب التالي:",
-            edahabiaCardLabel: "رقم البطاقة الذهبية:",
-            edahabiaNameLabel: "باسم:",
-            edahabiaNotice: "بعد إتمام التحويل، يرجى تزويدنا بصورة من إيصال التحويل عبر الهاتف أو صفحة إثبات الدفع.",
-            edahabiaContinue: "متابعة لصفحة إثبات الدفع",
-            proofHeader: "إثبات الدفع عبر بريد الجزائر",
-            proofText: "للتأكد من معالجة طلبك بسرعة، يرجى رفع صورة أو مسح ضوئي لإيصال الدفع (الوصل البريدي أو لقطة الشاشة).",
-            proofUploadLabel: "اضغط للرفع أو سحب الملف هنا",
-            proofFileTypes: "صيغ الملفات المسموحة: JPEG, PNG, PDF",
-            proofNoFile: "لم يتم اختيار أي ملف.",
-            proofSubmit: "تأكيد إثبات الدفع",
             customFormHeader: "اطلب تصميمك الخاص",
             customFormSubtitle: "شاركنا تفاصيل مشروعك (أبواب، نوافذ، ديكورات...) وسنتواصل معك بأسرع وقت.",
             customDimensionsLabel: "القياسات والأبعاد المطلوبة:",
@@ -697,8 +803,8 @@
             placeholderDetails: "تفاصيل إضافية عن نوع المادة، اللون، والولاية",
             customSubmitButton: "إرسال طلب التصميم",
             aboutHeader: "قصة نافع للحدادة الفنية",
-            aboutP1: "تأسست ورشة \"نافع للحدادة الفنية\" على مبدأ الشغف بالصناعة الحديدية الدقيقة. منذ التأسيس، ونحن نلتزم بتقديم حلول متكاملة تدمج بين المتانة الهندسية والجمالية الفنية. تخصصنا يتركز في الأبواب والنوافذ الحديدية المبتكرة، إضافة إلى الديكورات المنزلية الفخمة وديكورات الأعراس التي تتطلب لمسة إبداعية خاصة.",
-            aboutP2: "نعمل بأحدث تقنيات اللحام والتشكيل المعدني لضمان جودة لا تُضاهى. فخورون بكوننا نخدم عملائنا في جميع الولايات الجزائرية الـ 58، ونحول أفكارهم إلى قطع فنية تدوم طويلاً. احترافيتنا هي ضماننا لك.",
+            aboutP1: "تأسست ورشة \"نافع للحدادة الفنية\" على مبدأ الشغف بالصناعة الحديدية الدقيقة...",
+            aboutP2: "نعمل بأحدث تقنيات اللحام والتشكيل المعدني لضمان جودة لا تُضاهى...",
             aboutP3: "هدفنا ليس مجرد بيع منتج، بل تقديم استثمار في الجودة والجمال لمنزلك أو مشروعك.",
             aboutAction: "العودة للرئيسية",
             successTitle: "تم استلام طلبك بنجاح!",
@@ -708,35 +814,53 @@
             footerNafaTitle: "نافع للحدادة الفنية",
             footerNafaDesc: "شغف الحدادة وتقنيات اللحام الحديثة. نصنع الجودة التي تدوم.",
             footerContactTitle: "تواصل معنا",
-            footerPhoneValue: "+966 50 123 4567",
+            footerPhoneValue: "0776 08 40 97",
             footerDelivery: "التوصيل متوفر لـ 58 ولاية جزائرية.",
             footerQuickLinks: "روابط سريعة",
             footerSocialTitle: "تابعنا",
             currency: "دينار جزائري",
             cartEmpty: "سلة التسوق فارغة.",
-            prod1Name: "باب حديد فاخر",
-            prod1Desc: "تصميم عصري مع متانة عالية.",
-            prod2Name: "ماكينة لحام إنفيرتر 200A",
-            prod2Desc: "أداء عالي وكفاءة طاقة ممتازة.",
-            prod3Name: "باب حديد فخم",
-            prod3Desc: "تصميم كلاسيكي مع لمسة عصرية.",
-            prod4Name: "قفازات لحام مقاومة للحرارة",
-            prod4Desc: "حماية فائقة لليدين أثناء عمليات اللحام.",
-            prod5Name: "نافذة حديدية مزخرفة",
-            prod5Desc: "إضاءة طبيعية مع حماية وأناقة.",
-            prod6Name: "ديكور زفاف حديدي",
-            prod6Desc: "لمسة فنية تضفي جمالاً على يومك الخاص.",
-            prod7Name: "ديكور منزلي حديدي",
-            prod7Desc: "قطع فنية تدوم لعقود في منزلك.",
-            prod8Name: "درع واقٍ للوجه",
-            prod8Desc: "حماية شاملة أثناء التشغيل.",
-            addToCart: "أضف إلى السلة",
-            videoView: "عرض فيديو"
+
+            // أسماء مؤقتة — يمكنك تعديلها لاحقًا
+            prod1Name: "نافذة حديدية - سيتم تسميتها لاحقًا",
+            prod1Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod1LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod2Name: "نافذة عصرية - سيتم تسميتها لاحقًا",
+            prod2Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod2LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod3Name: "نافذة مزدوجة - سيتم تسميتها لاحقًا",
+            prod3Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod3LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod4Name: "باب حديدي فخم - سيتم تسميتها لاحقًا",
+            prod4Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod4LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod5Name: "باب مزخرف - سيتم تسميتها لاحقًا",
+            prod5Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod5LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod6Name: "ديكور منزلي 1 - سيتم تسميتها لاحقًا",
+            prod6Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod6LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod7Name: "ديكور منزلي 2 - سيتم تسميتها لاحقًا",
+            prod7Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod7LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            prod8Name: "ديكور منزلي 3 - سيتم تسميتها لاحقًا",
+            prod8Desc: "وصف موجز سيتم تعديله لاحقًا.",
+            prod8LongDesc: "وصف طويل سيتم تعديله لاحقًا.",
+
+            addToCart: "أضف إلى السلة"
           },
-          fr: { /* ... كما هو */ },
-          en: { /* ... كما هو */ }
+          fr: {},
+          en: {}
         };
-        // ##################### 2. وظائف العرض #####################
+
+        // === وظائف العرض ===
         function changeView(viewId) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             const target = document.getElementById(viewId);
@@ -747,6 +871,7 @@
             }
             if (viewId === 'cart') renderCart();
         }
+
         function renderProducts(category = 'all') {
             const container = document.getElementById('products-grid');
             if (!container) return;
@@ -756,8 +881,8 @@
             filtered.forEach(p => {
                 const name = translations[lang][p.nameKey];
                 const desc = translations[lang][p.descKey];
-                const addToCartText = translations[lang].addToCart;
                 const formattedPrice = p.price.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+                const formattedOldPrice = p.oldPrice.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
                 const html = `
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-cool hover:shadow-2xl hover:shadow-primary/20 transition duration-300 flex flex-col transform hover:scale-[1.03] hover-grow">
                         <div class="relative w-full h-48 bg-gray-200 overflow-hidden">
@@ -766,10 +891,14 @@
                         <div class="p-4 flex-grow flex flex-col justify-between">
                             <div>
                                 <h3 class="text-lg font-bold text-gray-900 mb-1">${name}</h3>
-                                <p class="text-gray-600 text-sm mb-3">${desc}</p>
+                                <p class="text-gray-600 text-sm mb-2">${desc}</p>
                             </div>
                             <div class="mt-auto">
-                                <p class="text-2xl font-extrabold text-primary mb-3">${formattedPrice}</p>
+                                <div class="flex items-center mb-2">
+                                    <span class="text-sm text-gray-500 line-through mr-2">${formattedOldPrice}</span>
+                                    <span class="text-xl font-extrabold text-primary">${formattedPrice}</span>
+                                    <span class="text-xs bg-accent text-white px-2 py-0.5 rounded mr-2">تخفيض</span>
+                                </div>
                                 <button data-action="view-product" data-id="${p.id}" class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary-dark transition duration-200 shadow-md">عرض التفاصيل</button>
                             </div>
                         </div>
@@ -778,27 +907,75 @@
                 container.insertAdjacentHTML('beforeend', html);
             });
         }
+
         function showProductDetail(productId) {
             const product = productsData.find(p => p.id == productId);
             if (!product) return;
             const lang = currentLang.lang;
             const name = translations[lang][product.nameKey];
             const desc = translations[lang][product.descKey];
+            const longDesc = translations[lang][product.longDescKey] || desc;
             const formattedPrice = product.price.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
-            // معرض الصور
-            const galleryHtml = product.gallery.map(img => `<img src="${img}" alt="${name}">`).join('');
-            document.getElementById('product-gallery').innerHTML = galleryHtml;
+            const formattedOldPrice = product.oldPrice.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
+
+            const galleryTrack = document.getElementById('gallery-track');
+            const galleryDots = document.getElementById('gallery-dots');
+            galleryTrack.innerHTML = '';
+            galleryDots.innerHTML = '';
+
+            let currentIndex = 0;
+            product.gallery.forEach((img, i) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<img src="${img}" alt="${name}">`;
+                galleryTrack.appendChild(div);
+
+                const dot = document.createElement('div');
+                dot.className = `gallery-dot ${i === 0 ? 'active' : ''}`;
+                dot.dataset.index = i;
+                dot.addEventListener('click', () => goToSlide(i));
+                galleryDots.appendChild(dot);
+            });
+
+            function goToSlide(index) {
+                currentIndex = index;
+                galleryTrack.style.transform = `translateX(-${index * 100}%)`;
+                document.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+
+            document.getElementById('gallery-prev').onclick = () => {
+                currentIndex = (currentIndex - 1 + product.gallery.length) % product.gallery.length;
+                goToSlide(currentIndex);
+            };
+            document.getElementById('gallery-next').onclick = () => {
+                currentIndex = (currentIndex + 1) % product.gallery.length;
+                goToSlide(currentIndex);
+            };
+
+            let startX = 0;
+            galleryTrack.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+            galleryTrack.addEventListener('touchend', e => {
+                const endX = e.changedTouches[0].clientX;
+                if (startX - endX > 50) {
+                    document.getElementById('gallery-next').click();
+                } else if (endX - startX > 50) {
+                    document.getElementById('gallery-prev').click();
+                }
+            });
+
             document.getElementById('product-detail-title').textContent = name;
+            document.getElementById('product-detail-long-desc').textContent = longDesc;
             document.getElementById('product-detail-price').textContent = formattedPrice;
-            document.getElementById('product-detail-desc').textContent = desc;
-            // زر الإضافة إلى السلة
+            document.getElementById('product-detail-old-price').textContent = formattedOldPrice;
             document.getElementById('add-to-cart-detail').onclick = () => {
                 addToCart(productId);
                 alert('تمت إضافة المنتج إلى السلة!');
             };
             changeView('product-detail');
         }
-        // ##################### 3. تعدد اللغات #####################
+
         function getTranslation(key) {
             return translations[currentLang.lang][key] || translations['ar'][key];
         }
@@ -815,10 +992,10 @@
                 const key = el.getAttribute('data-lang-key-placeholder');
                 if (key) el.placeholder = getTranslation(key);
             });
-            renderProducts(); // إعادة عرض المنتجات بلغة جديدة
+            renderProducts();
             if (currentView === 'cart') renderCart();
         }
-        // ##################### 4. السلة #####################
+
         function updateCartCount() {
             const count = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
             const btn = document.getElementById('checkout-button');
@@ -886,13 +1063,12 @@
             totalEl.textContent = total.toLocaleString(lang === 'ar' ? 'ar-DZ' : lang, { style: 'currency', currency: 'DZD', minimumFractionDigits: 0 });
             updateCartCount();
         }
-        // ##################### 5. ربط الأحداث #####################
+
         document.addEventListener('DOMContentLoaded', function () {
-            // تغيير اللغة
             document.getElementById('language-selector').addEventListener('change', function () {
                 setLanguage(this.value);
             });
-            // التنقل العادي
+
             document.querySelectorAll('[data-action="navigate"]').forEach(btn => {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -900,7 +1076,7 @@
                     if (target) changeView(target);
                 });
             });
-            // التنقل وإغلاق القائمة
+
             document.querySelectorAll('[data-action="navigate-and-close"]').forEach(btn => {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -913,7 +1089,7 @@
                     }
                 });
             });
-            // زر القائمة الموبايل
+
             document.getElementById('mobile-menu-button').addEventListener('click', function () {
                 const menu = document.getElementById('mobile-menu');
                 const isHidden = menu.classList.contains('hidden');
@@ -921,7 +1097,7 @@
                 document.getElementById('menu-icon').classList.toggle('hidden', isHidden);
                 document.getElementById('close-icon').classList.toggle('hidden', !isHidden);
             });
-            // أزرار السلة
+
             document.addEventListener('click', function (e) {
                 if (e.target.closest('[data-action="add-to-cart"]')) {
                     const btn = e.target.closest('[data-action="add-to-cart"]');
@@ -940,7 +1116,7 @@
                     showProductDetail(id);
                 }
             });
-            // تصنيف المنتجات
+
             document.querySelectorAll('[data-category]').forEach(btn => {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('bg-primary', 'text-white', 'bg-gray-200', 'text-gray-800'));
@@ -949,11 +1125,11 @@
                     renderProducts(category);
                 });
             });
-            // زر المتابعة من السلة
+
             document.getElementById('checkout-button')?.addEventListener('click', function () {
                 if (Object.keys(cart).length > 0) changeView('checkout');
             });
-            // نموذج الدفع
+
             const checkoutForm = document.getElementById('checkout-form');
             if (checkoutForm) {
                 checkoutForm.addEventListener('submit', function (e) {
@@ -965,7 +1141,7 @@
                     else if (method === 'cash') changeView('success-message');
                 });
             }
-            // نموذج إثبات الدفع
+
             const proofForm = document.getElementById('proof-form');
             if (proofForm) {
                 const fileInput = document.getElementById('receipt-upload');
@@ -980,10 +1156,8 @@
                     changeView('success-message');
                 });
             }
-            // نموذج التصميم حسب الطلب — تم تعطيل معالجة JS لأنه يُرسل عبر Formspree
-            // سيتم التعامل معه مباشرة عبر action في الـ form
 
-            // تهيئة أولية
+            // لا حاجة لـ preventDefault لأن النموذج يُرسل عبر Formspree
             renderProducts();
         });
     </script>
